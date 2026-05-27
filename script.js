@@ -405,9 +405,9 @@ async function humanizeText() {
   document.getElementById("humanizerCopyBtn").style.display = "none";
 
   const modeInstructions = {
-    formal: "Rewrite in a professional, polished, formal tone. Use precise vocabulary. Maintain structure but vary sentence rhythm naturally.",
-    casual: "Rewrite in a relaxed, conversational tone. Use contractions, informal phrasing, natural flow. Sounds like a real person talking.",
-    smart: "Rewrite to sound like a highly intelligent, thoughtful human author. Balance sophistication with authenticity. Include subtle rhetorical flourishes."
+    formal: "Tone: professional but warm. Think senior consultant writing a report — polished, but still human. Not robotic.",
+    casual: "Tone: like texting a smart friend. Loose, real, zero corporate speak. Throw in a 'honestly' or 'tbh' if it fits.",
+    smart: "Tone: sharp academic who also talks like a person. Sophisticated vocab but natural rhythm — like a PhD explaining something over coffee."
   };
 
   try {
@@ -420,7 +420,7 @@ async function humanizeText() {
     // To customize humanization behavior, edit the systemPrompt below.
     // ─────────────────────────────────────────────────────────────────
 
-    const systemPrompt = `You are an elite ghostwriter and prose specialist. Your job is to transform AI-generated text into natural, human-sounding writing that bypasses AI detection systems.
+    const systemPrompt = `You are a human writer rewriting text to sound completely natural and undetectable by AI detectors like GPTZero, Originality.ai, and Turnitin.
 
 ${modeInstructions[mode]}
 
