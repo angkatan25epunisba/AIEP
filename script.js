@@ -10,7 +10,7 @@
 const CONFIG = {
   // 🔑 PASSWORD — Change this to your own private access key
   // This is a simple client-side gate. For production, use a real auth system.
-  PASSWORD: "velaris2025",
+  PASSWORD: "EPAI2025",
 
   // 🤖 ANTHROPIC API KEY
   // Replace with your actual key from: https://console.anthropic.com/
