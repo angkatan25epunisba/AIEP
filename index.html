@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velaris AI — Private Intelligence Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════ LOCK SCREEN ══════════════ -->
+  <div id="lockScreen">
+    <div class="lock-bg-grid"></div>
+    <div class="lock-orb lock-orb-1"></div>
+    <div class="lock-orb lock-orb-2"></div>
+
+    <div class="lock-card">
+      <div class="lock-logo-wrap">
+        <div class="lock-sigil">V</div>
+      </div>
+      <h1 class="lock-title">VELARIS<span class="gold">.</span>AI</h1>
+      <p class="lock-sub">Private Intelligence Suite</p>
+
+      <div class="lock-input-wrap">
+        <span class="lock-icon">⬡</span>
+        <input type="password" id="passInput" placeholder="Enter access key" autocomplete="off" />
+      </div>
+      <div id="lockError" class="lock-error"></div>
+      <button class="btn-access" onclick="checkPassword()">
+        <span class="btn-text">Request Access</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ ACCESS GRANTED OVERLAY ══════════════ -->
+  <div id="accessOverlay" class="access-overlay hidden">
+    <div class="access-lines">
+      <div class="access-line" id="al1">Authenticating credentials<span class="blink">_</span></div>
+      <div class="access-line" id="al2">Establishing secure channel<span class="blink">_</span></div>
+      <div class="access-line" id="al3">Loading AI core modules<span class="blink">_</span></div>
+      <div class="access-line" id="al4">Initializing system<span class="blink">_</span></div>
+      <div class="access-granted" id="accessGrantedText">ACCESS GRANTED</div>
+      <div class="access-ready" id="aiCoreReady">⬡ &nbsp;AI Core Ready</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MAIN APP ══════════════ -->
+  <div id="mainApp" class="hidden">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="header-sigil">V</div>
+        <div class="header-brand">
+          <span class="brand-name">VELARIS<span class="gold">.</span>AI</span>
+          <span class="brand-tag">Private Suite</span>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Secure Session Active</span>
+      </div>
+      <button class="lock-btn" onclick="lockApp()" title="Lock">⬡ Lock</button>
+    </header>
+
+    <!-- Tab Nav -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="detector" onclick="switchTab('detector', this)">
+        <span class="tab-icon">◈</span> AI Detector
+      </button>
+      <button class="tab-btn" data-tab="humanizer" onclick="switchTab('humanizer', this)">
+        <span class="tab-icon">◇</span> AI Humanizer
+      </button>
+    </nav>
+
+    <!-- ── DETECTOR TAB ── -->
+    <div id="tab-detector" class="tab-content active">
+      <div class="panel-wrap">
+
+        <!-- Input Panel -->
+        <div class="glass-panel input-panel">
+          <div class="panel-header">
+            <span class="panel-label">INPUT TEXT</span>
+            <div class="panel-actions">
+              <span class="word-count" id="detectorWordCount">0 words</span>
+              <button class="icon-btn" onclick="clearDetector()" title="Clear">✕ Clear</button>
+            </div>
+          </div>
+          <textarea id="detectorInput" placeholder="Paste your text here to analyze for AI-generated content…" oninput="updateWordCount('detectorInput','detectorWordCount')"></textarea>
+          <div class="panel-footer">
+            <button class="btn-primary" onclick="analyzeText()">
+              <span class="btn-glyph">◈</span>
+              <span>Analyze</span>
+              <div class="btn-loader" id="analyzeLoader"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="glass-panel output-panel">
+          <div class="panel-header">
+            <span class="panel-label">ANALYSIS RESULT</span>
+            <button class="icon-btn" id="detectorCopyBtn" onclick="copyResult('detectorHighlight')" style="display:none">⎘ Copy</button>
+          </div>
+
+          <div id="detectorPlaceholder" class="output-placeholder">
+            <div class="placeholder-icon">◈</div>
+            <p>Analysis results will appear here</p>
+          </div>
+
+          <div id="detectorResult" class="detector-result hidden">
+            <!-- Score Cards -->
+            <div class="score-row">
+              <div class="score-card">
+                <span class="score-label">AI Score</span>
+                <span class="score-value gold" id="aiScore">—</span>
+              </div>
+              <div class="score-card">
+                <span class="score-label">Human Score</span>
+                <span class="score-value" id="humanScore">—</span>
+              </div>
+              <div class="score-card">
+                <span class="score-label">Confidence</span>
+                <span class="score-value" id="confidence">—</span>
+              </div>
+            </div>
+
+            <!-- Progress Bars -->
+            <div class="bar-section">
+              <div class="bar-row">
+                <span class="bar-label">AI Probability</span>
+                <div class="progress-track">
+                  <div class="progress-fill gold-fill" id="aiBar" style="width:0%"></div>
+                </div>
+                <span class="bar-pct" id="aiBarPct">0%</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Human Probability</span>
+                <div class="progress-track">
+                  <div class="progress-fill white-fill" id="humanBar" style="width:0%"></div>
+                </div>
+                <span class="bar-pct" id="humanBarPct">0%</span>
+              </div>
+            </div>
+
+            <!-- Verdict Badge -->
+            <div class="verdict-wrap">
+              <div class="verdict-badge" id="verdictBadge">
+                <span id="verdictIcon">◈</span>
+                <span id="verdictText">Analyzing…</span>
+              </div>
+            </div>
+
+            <!-- Highlighted Text -->
+            <div class="highlight-section">
+              <span class="panel-label">HIGHLIGHTED TEXT</span>
+              <div id="detectorHighlight" class="highlighted-text"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HUMANIZER TAB ── -->
+    <div id="tab-humanizer" class="tab-content">
+      <div class="panel-wrap">
+
+        <!-- Input Panel -->
+        <div class="glass-panel input-panel">
+          <div class="panel-header">
+            <span class="panel-label">INPUT TEXT</span>
+            <div class="panel-actions">
+              <span class="word-count" id="humanizerWordCount">0 words</span>
+              <button class="icon-btn" onclick="clearHumanizer()" title="Clear">✕ Clear</button>
+            </div>
+          </div>
+          <textarea id="humanizerInput" placeholder="Paste AI-generated text here to humanize…" oninput="updateWordCount('humanizerInput','humanizerWordCount')"></textarea>
+
+          <!-- Mode Selector -->
+          <div class="mode-selector">
+            <span class="mode-label">REFINEMENT MODE</span>
+            <div class="mode-options">
+              <label class="mode-option">
+                <input type="radio" name="mode" value="formal" checked />
+                <span class="mode-chip">Formal</span>
+              </label>
+              <label class="mode-option">
+                <input type="radio" name="mode" value="casual" />
+                <span class="mode-chip">Casual</span>
+              </label>
+              <label class="mode-option">
+                <input type="radio" name="mode" value="smart" />
+                <span class="mode-chip">Smart</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="panel-footer">
+            <button class="btn-primary" onclick="humanizeText()">
+              <span class="btn-glyph">◇</span>
+              <span>Refine Text</span>
+              <div class="btn-loader" id="humanizeLoader"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="glass-panel output-panel">
+          <div class="panel-header">
+            <span class="panel-label">REFINED OUTPUT</span>
+            <button class="icon-btn" id="humanizerCopyBtn" onclick="copyResult('humanizedOutput')" style="display:none">⎘ Copy</button>
+          </div>
+
+          <div id="humanizerPlaceholder" class="output-placeholder">
+            <div class="placeholder-icon">◇</div>
+            <p>Humanized text will appear here</p>
+          </div>
+
+          <div id="humanizedOutput" class="humanized-output hidden"></div>
+
+          <div id="humanizerMeta" class="humanizer-meta hidden">
+            <span class="meta-item">◈ <span id="originalWords">0</span> words input</span>
+            <span class="meta-sep">·</span>
+            <span class="meta-item">◇ <span id="outputWords">0</span> words output</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <span>VELARIS<span class="gold">.</span>AI &nbsp;·&nbsp; Private Intelligence Suite &nbsp;·&nbsp; Encrypted Session</span>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
